@@ -38,7 +38,7 @@ app.post("/auth/register",upload.single("picture"),register);
 /*  Moongose setup*/
 const PORT = 3001 || 6001;
 mongoose 
-  .connect('mongodb+srv://dummyuser:dummyuser123@cluster0.ms16h4x.mongodb.net/?retryWrites=true&w=majority', {
+  .connect('mongodb+srv://dummyuser:<password>@cluster0.ms16h4x.mongodb.net/?retryWrites=true&w=majorityy', {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     
