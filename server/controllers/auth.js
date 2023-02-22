@@ -35,3 +35,21 @@ export const register = async (req, res) => {
     res.status(500).json({error:err.message});
   }
 };
+// Loging in
+export const login =async(req,res)=>{
+  try {
+    const {email,password}=req.body;
+    const user =await User.findOne({email:email});
+    if(!user)
+    return res.status(400).json({msg:"user does not exist. "});
+    if(!isMatch)
+    return res.status(400).json({msg:"Invalid credentials"});
+    const token=jwt.sign({id:user.id},process.env.JWT_SECRET);
+    //to keep the password safe no to send to front end
+    delete user.password;
+    res.status(200).json({token,user});
+    //password matching or not
+    const isMatch=await bcrypt.compare(password,user.password);
+    res.status(500).json({error :err.message});
+  }
+}
