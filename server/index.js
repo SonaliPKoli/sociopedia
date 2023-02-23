@@ -9,8 +9,11 @@ import morgan from "morgan";
 import path from "path";
 import { fileURLToPath } from "url";
 import authRoutes from "./routes/auth.js";
-import userRoutes  from "./routes/users.js";
-import {register} from './controllers/auth.js';
+import userRoutes from "./routes/users.js";
+import { register } from "./controllers/auth.js";
+import postRoutes from "./routes/posts.js";
+import { verifyToken } from "./middleware/auth.js";
+import { createPost } from "./controllers/posts.js";
 /* Configuration of Middleware that runs in between diff things*/
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -35,20 +38,26 @@ const storage = multer.diskStorage({
   },
 });
 const upload = multer({ storage });
-//routes for  express routes;
-app.use("/users",userRoutes);
+
 /* Route with files */
-app.post("/auth/register",upload.single("picture"),register);
+app.post("/auth/register", upload.single("picture"), register);
+//post route
+app.post("/posts", verifyToken, upload.single("picture"), createPost);
 /* Routes*/
-app.use("/auth",authRoutes);
+app.use("/auth", authRoutes);
+//routes for  express routes;
+app.use("/users", userRoutes);
+app.use("/posts", postRoutes);
 /*  Moongose setup*/
 const PORT = 3001 || 6001;
-mongoose 
-  .connect('mongodb+srv://dummyuser:dummyuser123@cluster0.ms16h4x.mongodb.net/?retryWrites=true&w=majority', {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    
-  })
+mongoose
+  .connect(
+    "mongodb+srv://dummyuser:dummyuser123@cluster0.ms16h4x.mongodb.net/?retryWrites=true&w=majority",
+    {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    }
+  )
   .then(() => {
     app.listen(PORT, () => console.log(`Server Port : ${PORT}`));
   })
