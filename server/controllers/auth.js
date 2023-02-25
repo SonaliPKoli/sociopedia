@@ -51,5 +51,7 @@ export const login =async(req,res)=>{
     //password matching or not
     const isMatch=await bcrypt.compare(password,user.password);
     res.status(500).json({error :err.message});
+  }catch(err){
+    res.status(404).json({error :err.message}); 
   }
 }
